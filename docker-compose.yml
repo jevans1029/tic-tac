@@ -50,9 +50,7 @@ services:
     volumes:
       - ./sprint2-login-backend/frontend:/app
       - /app/node_modules
-    command: npm run dev -- --host
     depends_on:
       - backend
-
 volumes:
   mysql-data:
