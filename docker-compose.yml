@@ -21,6 +21,7 @@ services:
       interval: 5s
 
   backend:
+    container_name: backend
     build: ./sprint2-login-backend/backend
     ports:
       - "3000:3000"
