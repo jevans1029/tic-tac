@@ -11,6 +11,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import MapPage from './pages/MapPage';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import Game from './pages/Game';
 
 /**
  * Main application component that manages authentication and routing.
@@ -68,6 +69,18 @@ function App() {
               <Navigate to="/login" replace />
             )
           }
+        />
+
+        {/* Game Route */}
+        <Route
+          path="/game"
+          element={<Game />}
+          //   authenticated ? (
+          //     <Game />
+          //   ) : (
+          //     <Navigate to="/login" replace />
+          //   )
+          // }
         />
       </Routes>
     </Router>
