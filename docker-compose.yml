@@ -14,6 +14,11 @@ services:
     volumes:
       - mysql-data:/var/lib/mysql
     command: --ssl=OFF
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 5s
+      retries: 10
+      interval: 5s
 
   backend:
     build: ./sprint2-login-backend/backend
@@ -29,6 +34,10 @@ services:
       FRONTEND_URL: http://localhost:5173
       JWT_SECRET: your-secret-key
       NODE_TLS_REJECT_UNAUTHORIZED: "0"
+    volumes:
+      - ./sprint2-login-backend/backend:/app
+      - /app/node_modules
+    command: npm run dev
     depends_on:
       - mysql
 
@@ -38,6 +47,10 @@ services:
       - "5173:5173"
     environment:
       VITE_API_URL: http://localhost:3000
+    volumes:
+      - ./sprint2-login-backend/frontend:/app
+      - /app/node_modules
+    command: npm run dev -- --host
     depends_on:
       - backend
 
