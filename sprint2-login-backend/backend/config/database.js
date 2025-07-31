@@ -31,15 +31,30 @@ const pool = mysql.createPool({
   ssl: false // Disable SSL for local development
 });
 
-pool.getConnection()
-  .then(conn => {
+const maxRetries = 5;
+const retryInterval = 5000; // 5 seconds
+
+const connectWithRetry = async (retries = maxRetries) => {
+  try {
+    const conn = await pool.getConnection();
     console.log('Successfully connected to MySQL');
     conn.release();
-  })
-  .catch(err => {
-    console.error('MySQL connection failed on startup:', err);
-  });
-  
+    return true;
+  } catch (err) {
+    console.log(`MySQL connection attempt failed (${maxRetries - retries + 1}/${maxRetries}):`, err.message);
+    if (retries > 0) {
+      await new Promise(resolve => setTimeout(resolve, retryInterval));
+      return connectWithRetry(retries - 1);
+    }
+    console.error('Max retries reached. Could not connect to MySQL.');
+    // Don't throw error - let the application continue
+    return false;
+  }
+};
+
+// Initial connection attempt
+connectWithRetry();
+
 export default pool;
 
-  
+
