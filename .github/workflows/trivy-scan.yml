@@ -1,6 +1,7 @@
 name: Docker Security Scan
 
 on:
+  workflow_dispatch:  # Allows manual triggers
   push:
     branches: [ main ]
   pull_request:
