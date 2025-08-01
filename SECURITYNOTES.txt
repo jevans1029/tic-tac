@@ -64,3 +64,5 @@ require('dotenv').config();
 
 
 2. CHATGPT suggested a .env and .gitignore way late in the process
+
+3. My node.js was out of date- ChatGPTs first answer was to have me downgrade vite instead of use the most recent everything
