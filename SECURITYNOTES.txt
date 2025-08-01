@@ -1,4 +1,4 @@
-ASKED CHAT GPT: "something in the code had a comment that it needed to be updated- where was that?"
+1. ASKED CHAT GPT: "something in the code had a comment that it needed to be updated- where was that?"
 
 Good catch — during our earlier steps, there was likely a placeholder or a comment like:
 
@@ -61,3 +61,6 @@ js
 Copy
 Edit
 require('dotenv').config();
+
+
+2. CHATGPT suggested a .env and .gitignore way late in the process
