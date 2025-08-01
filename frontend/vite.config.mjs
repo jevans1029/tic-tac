@@ -1,5 +1,5 @@
 import { defineConfig } from 'vite';
 
 export default defineConfig({
-  root: '.', // default
+  root: '.', // serves index.html at the root of frontend/
 });

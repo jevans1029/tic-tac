@@ -6,7 +6,7 @@
  * No dependencies - Uses Vanilla JS
  *
  * @author: Vasanth Krishnamoorthy
- * @co-author: Akshat Singh Kushwaha 
+ * @co-author: Akshat Singh Kushwaha
  */
 const N_SIZE = 3;
 const EMPTY = '&nbsp;';
@@ -102,4 +102,24 @@ init();
 
 document.getElementById('theme-switch').addEventListener('change', function() {
     document.body.classList.toggle('dark', this.checked);
+});
+
+document.getElementById('login-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const username = e.target.username.value;
+  const password = e.target.password.value;
+
+  const res = await fetch('/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+    body: JSON.stringify({ username, password })
+  });
+
+  if (res.ok) {
+    alert('Logged in!');
+  } else {
+    alert('Login failed');
+  }
 });
