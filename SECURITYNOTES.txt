@@ -1,0 +1,63 @@
+ASKED CHAT GPT: "something in the code had a comment that it needed to be updated- where was that?"
+
+Good catch — during our earlier steps, there was likely a placeholder or a comment like:
+
+js
+Copy
+Edit
+git clone <your-repo-url>  // <-- Update this with the actual repo URL
+
+Or in other places like:
+
+js
+Copy
+Edit
+app.listen(8000, () => {
+  console.log("Server running on http://localhost:8000"); // TODO: make port configurable
+});
+
+ME: "it had to do with passwords"
+
+Ah — that jogs the memory. You're likely thinking of a TODO or warning comment in the backend authentication logic — specifically in the code using Passport.js or bcrypt, probably where user registration or password checking occurs.
+Why It Was There
+This type of TODO usually flags:
+
+Weak error messages (res.status(500) with no details)
+
+Lack of secure logging (not logging failed attempts or logging plaintext)
+
+Incomplete error handling (e.g., user already exists)
+
+
+The actual issue:
+app.use(session({
+  secret: 'replace-this-secret',
+  resave: false,
+  saveUninitialized: false
+}));
+
+Info given after specifically asking:
+The secret here is used to sign session cookies, and using a hardcoded placeholder like 'replace-this-secret' is a security risk.
+What You Should Do
+Instead of hardcoding, pull it from an environment variable:
+
+js
+Copy
+Edit
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'default-dev-secret',
+  resave: false,
+  saveUninitialized: false
+}));
+Then in your .env file (not committed to GitHub):
+
+arduino
+Copy
+Edit
+SESSION_SECRET=something-long-and-random
+And make sure to load .env at the top of your server.js:
+
+js
+Copy
+Edit
+require('dotenv').config();
