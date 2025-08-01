@@ -2,10 +2,8 @@ name: Docker Security Scan
 
 on:
   workflow_dispatch:  # Allows manual triggers
-  push:
-    branches: [ main ]
   pull_request:
-    branches: [ main ]
+    branches: [ master ]
 
 jobs:
   scan-frontend:
@@ -23,6 +21,7 @@ jobs:
           image-ref: tic-tac-toe-frontend:${{ github.sha }}
           format: 'table'
           severity: 'CRITICAL,HIGH'
+          exit-code: '1'
 
   scan-backend:
     runs-on: ubuntu-latest
@@ -39,3 +38,4 @@ jobs:
           image-ref: tic-tac-toe-backend:${{ github.sha }}
           format: 'table'
           severity: 'CRITICAL,HIGH'
+          exit-code: '1'
