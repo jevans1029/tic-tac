@@ -42,14 +42,14 @@ tic-tac-toe-js/
 
 ### 🔧 Step-by-Step Setup
 
-*** 1. Clone the Repo ***
+### 1. Clone the Repo
 
 ```bash
 git clone <your-repo-url>
 cd tic-tac-toe-js
 ```
 
-*** 2. Start Everything with Docker ***
+### 2. Start Everything with Docker
 
 This will run:
 
