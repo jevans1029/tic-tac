@@ -1,57 +1,34 @@
 version: '3.8'
 
 services:
-  mysql:
-    image: mysql:8.0
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: sprint2db
-      MYSQL_USER: sprint2user
-      MYSQL_PASSWORD: sprint2pass
-      MYSQL_SSL: "OFF"
-    ports:
-      - "3306:3306"
-    volumes:
-      - mysql-data:/var/lib/mysql
-    command: --ssl=OFF
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      timeout: 5s
-      retries: 10
-      interval: 5s
-
-  backend:
-    container_name: backend
-    build: ./sprint2-login-backend/backend
-    ports:
-      - "3000:3000"
-    environment:
-      DB_HOST: mysql
-      DB_USER: sprint2user
-      DB_PASSWORD: sprint2pass
-      DB_NAME: sprint2db
-      DB_PORT: 3306
-      BACKEND_PORT: 3000
-      FRONTEND_URL: http://localhost:5173
-      JWT_SECRET: your-secret-key
-      NODE_TLS_REJECT_UNAUTHORIZED: "0"
-    volumes:
-      - ./sprint2-login-backend/backend:/app
-      - /app/node_modules
-    command: npm run dev
-    depends_on:
-      - mysql
-
   frontend:
-    build: ./sprint2-login-backend/frontend
+    build:
+      context: ./frontend
     ports:
-      - "5173:5173"
-    environment:
-      VITE_API_URL: http://localhost:3000
-    volumes:
-      - ./sprint2-login-backend/frontend:/app
-      - /app/node_modules
+      - "3000:80"
     depends_on:
       - backend
+
+  backend:
+    build:
+      context: ./backend
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://gameuser:gamepass@db:5432/gamedb
+    depends_on:
+      - db
+
+  db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: gameuser
+      POSTGRES_PASSWORD: gamepass
+      POSTGRES_DB: gamedb
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
 volumes:
-  mysql-data:
+  pgdata:
