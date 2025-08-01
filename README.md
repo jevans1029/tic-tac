@@ -32,20 +32,24 @@ Make sure you have the following installed:
 ---
 
 ### 📁 Folder Structure
+```plaintext
 tic-tac-toe-js/
 ├── backend/ ← Node.js API server
 ├── frontend/ ← HTML/CSS/JS frontend with Vite
 ├── docker-compose.yml ← Multi-container setup
 └── README.md
+```
 
 ### 🔧 Step-by-Step Setup
 
-#### 1. Clone the Repo
+*** 1. Clone the Repo ***
 
 ```bash
 git clone <your-repo-url>
 cd tic-tac-toe-js
-#### 2. Start Everything with Docker
+```
+
+*** 2. Start Everything with Docker ***
 
 This will run:
 
@@ -55,6 +59,8 @@ This will run:
 
 ```bash
 docker compose up --build
+```
+
 #### 3. Open the App
 
 Once everything is running, open your browser and go to:
@@ -75,6 +81,8 @@ Once everything is running, open your browser and go to:
 cd frontend
 npm install
 npm run dev
+```
+
 ## ✅ Features
 
 - Classic 3x3 Tic Tac Toe
