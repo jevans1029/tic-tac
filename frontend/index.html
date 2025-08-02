@@ -48,6 +48,14 @@
 
   <!-- 🔐 Login Script -->
 <script type="module">
+  // Attach event listeners after DOM loads
+  const themeSwitch = document.getElementById('theme-switch');
+  if (themeSwitch) {
+    themeSwitch.addEventListener('change', function () {
+      document.body.classList.toggle('dark', this.checked);
+    });
+  }
+
   document.getElementById('login-form').addEventListener('submit', async (e) => {
     e.preventDefault();
 
@@ -62,24 +70,28 @@
         body: JSON.stringify({ username, password })
       });
 
-      let data = {};
-      try {
-        data = await res.json(); // This could throw
-      } catch (jsonErr) {
-        console.warn("Response wasn't valid JSON");
-      }
+      const data = await res.json();
 
       if (!res.ok || data.error) {
-        alert('Login failed: ' + (data.error || res.statusText));
+        alert('Login failed: ' + (data.error || 'Invalid credentials'));
         return;
       }
 
-      // ✅ Login successful
+      // Success
       alert('Login successful!');
       document.getElementById('auth-section').style.display = 'none';
       document.getElementById('welcome-section').style.display = 'block';
       document.getElementById('welcome-msg').innerText = `Welcome, ${username}!`;
       document.getElementById('tictactoe').classList.remove('locked');
+
+      // 🟢 Reattach toggle in case DOM changes
+      const toggle = document.getElementById('theme-switch');
+      if (toggle && !toggle.hasListener) {
+        toggle.addEventListener('change', function () {
+          document.body.classList.toggle('dark', this.checked);
+        });
+        toggle.hasListener = true;
+      }
 
     } catch (err) {
       console.error(err);
@@ -87,6 +99,7 @@
     }
   });
 </script>
+
 
 
 
