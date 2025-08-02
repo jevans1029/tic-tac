@@ -1,36 +1,22 @@
 version: '3.8'
 
 services:
-  frontend:
-    build:
-      context: ./frontend
-    command: npm run dev
-    ports:
-      - "5173:5173"
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules  # prevent overwriting node_modules
-    environment:
-      - VITE_HOST=0.0.0.0
-    depends_on:
-      - backend
-
   backend:
     build:
       context: ./backend
     ports:
       - "8000:8000"
     environment:
-      - DATABASE_URL=postgresql://gameuser:gamepass@db:5432/gamedb
+      - DATABASE_URL=${DATABASE_URL}
     depends_on:
       - db
 
   db:
     image: postgres:15-alpine
     environment:
-      POSTGRES_USER: gameuser
-      POSTGRES_PASSWORD: gamepass
-      POSTGRES_DB: gamedb
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
     volumes:
       - pgdata:/var/lib/postgresql/data
     ports:

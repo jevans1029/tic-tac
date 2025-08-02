@@ -41,3 +41,4 @@ backend/*.sqlite
 # Ignore compiled frontend artifacts (if any)
 frontend/*.log
 frontend/*.sqlite
+.env
