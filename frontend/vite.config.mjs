@@ -1,5 +1,13 @@
 import { defineConfig } from 'vite';
 
 export default defineConfig({
-  root: '.', // serves index.html at the root of frontend/
+  root: '.',
+  build: {
+    rollupOptions: {
+      input: {
+        main: './index.html',
+        register: './register.html'  // 👈 Add this line
+      }
+    }
+  }
 });
