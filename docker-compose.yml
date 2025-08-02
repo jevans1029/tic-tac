@@ -4,8 +4,14 @@ services:
   frontend:
     build:
       context: ./frontend
+    command: npm run dev
     ports:
-      - "3000:80"
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules  # prevent overwriting node_modules
+    environment:
+      - VITE_HOST=0.0.0.0
     depends_on:
       - backend
 

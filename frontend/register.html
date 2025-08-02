@@ -23,12 +23,12 @@
       const username = e.target.username.value;
       const password = e.target.password.value;
 
-      const res = await fetch('/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({ username, password })
-      });
+      const res = await fetch('http://localhost:8000/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ username, password })
+});
 
       if (res.ok) {
         alert('Registered successfully! You can now log in.');

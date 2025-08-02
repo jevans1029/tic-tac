@@ -5,7 +5,14 @@ const initializePassport = require('./passport-config');
 const db = require('./db');
 const bcrypt = require('bcrypt');
 
+
 const app = express();
+
+const cors = require('cors');
+app.use(cors({
+  origin: 'http://localhost:5173', // or 5173 depending on dev setup
+  credentials: true
+}));
 
 initializePassport(passport);
 
@@ -79,8 +86,25 @@ app.get('/protected', (req, res) => {
 
 // Start server after DB init
 async function initDb() {
-  await db.query(`CREATE TABLE IF NOT EXISTS users (...);`);
-  await db.query(`CREATE TABLE IF NOT EXISTS games (...);`);
+  await db.query(`
+    CREATE TABLE IF NOT EXISTS users (
+      id SERIAL PRIMARY KEY,
+      username TEXT UNIQUE NOT NULL,
+      password TEXT NOT NULL
+    );
+  `);
+
+  await db.query(`
+    CREATE TABLE IF NOT EXISTS games (
+      id SERIAL PRIMARY KEY,
+      player_x TEXT NOT NULL,
+      player_o TEXT NOT NULL,
+      winner TEXT,
+      moves JSONB NOT NULL,
+      played_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+  `);
+
   console.log('✅ Database initialized');
 }
 

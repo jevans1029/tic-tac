@@ -55,7 +55,8 @@ This will run:
 
 - **PostgreSQL** (for storing users and game logs)
 - **Express backend** at `http://localhost:8000`
-- **Frontend** (Vite) at `http://localhost:5173`
+- **Frontend** (Vite) at `http://localhost:5173
+`
 
 ```bash
 docker compose up --build
