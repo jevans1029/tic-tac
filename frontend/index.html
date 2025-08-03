@@ -41,6 +41,13 @@
     <div id="player" align="center">
       <span id="turn" role="status" aria-live="polite">Player X</span>
     </div>
+
+    <!-- 🎮 Games List -->
+    <div id="games-section" style="display: none; margin-top: 20px;">
+      <h3>Your Games</h3>
+      <button onclick="fetchGames()">Refresh Games</button>
+      <div id="games-list"></div>
+    </div>
   </main>
 
   <!-- 🧠 Game Logic -->
@@ -81,8 +88,10 @@
       alert('Login successful!');
       document.getElementById('auth-section').style.display = 'none';
       document.getElementById('welcome-section').style.display = 'block';
+      document.getElementById('games-section').style.display = 'block';
       document.getElementById('welcome-msg').innerText = `Welcome, ${username}!`;
       document.getElementById('tictactoe').classList.remove('locked');
+      fetchGames(); // Load initial games list
 
       // 🟢 Reattach toggle in case DOM changes
       const toggle = document.getElementById('theme-switch');
@@ -98,6 +107,27 @@
       alert('Login error: ' + err.message);
     }
   });
+
+  // Add games fetching function
+  window.fetchGames = async function() {
+    try {
+      const res = await fetch('http://localhost:8000/games', {
+        credentials: 'include'
+      });
+      const games = await res.json();
+      
+      const gamesList = document.getElementById('games-list');
+      gamesList.innerHTML = games.map(game => `
+        <div style="border: 1px solid #ccc; margin: 10px; padding: 10px;">
+          <p>Game #${game.id}</p>
+          <p>Winner: ${game.winner || 'Draw'}</p>
+          <p>Played: ${new Date(game.played_at).toLocaleString()}</p>
+        </div>
+      `).join('');
+    } catch (err) {
+      console.error('Failed to fetch games:', err);
+    }
+  };
 </script>
 
 

@@ -88,6 +88,16 @@ function set() {
     score[turn] += this.identifier;
     if (win(this)) {
         alert('Winner: Player ' + turn);
+        fetch('http://localhost:8000/game', {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                winner: 'Player ' + turn
+            })
+        }).catch(err => console.error('Failed to save game:', err));
         startNewGame();
     } else if (moves === N_SIZE * N_SIZE) {
         alert('Draw');

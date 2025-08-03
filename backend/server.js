@@ -58,10 +58,8 @@ async function initDb() {
     await db.query(`
       CREATE TABLE IF NOT EXISTS games (
         id SERIAL PRIMARY KEY,
-        player_x TEXT NOT NULL,
-        player_o TEXT NOT NULL,
+        username TEXT NOT NULL REFERENCES users(username),
         winner TEXT,
-        moves JSONB NOT NULL,
         played_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
     `);
@@ -112,6 +110,45 @@ app.get('/protected', (req, res) => {
     res.json({ message: 'You are authenticated!' });
   } else {
     res.status(401).json({ message: 'Not authorized' });
+  }
+});
+
+// ✅ Save new game
+app.post('/game', async (req, res) => {
+  if (!req.isAuthenticated()) {
+    return res.status(401).json({ error: 'Not authorized' });
+  }
+
+  const { winner } = req.body;
+  const username = req.user.username;
+
+  try {
+    const result = await db.query(
+      'INSERT INTO games(username, winner) VALUES($1, $2) RETURNING id',
+      [username, winner]
+    );
+    res.status(201).json({ id: result.rows[0].id });
+  } catch (err) {
+    console.error('Failed to save game:', err);
+    res.status(500).json({ error: 'Failed to save game' });
+  }
+});
+
+// ✅ Get user's games
+app.get('/games', async (req, res) => {
+  if (!req.isAuthenticated()) {
+    return res.status(401).json({ error: 'Not authorized' });
+  }
+
+  try {
+    const result = await db.query(
+      'SELECT * FROM games WHERE username = $1 ORDER BY played_at DESC',
+      [req.user.username]
+    );
+    res.json(result.rows);
+  } catch (err) {
+    console.error('Failed to fetch games:', err);
+    res.status(500).json({ error: 'Failed to fetch games' });
   }
 });
 
