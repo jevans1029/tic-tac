@@ -3,6 +3,7 @@ name: Docker Security Scan
 on:
   workflow_dispatch:  # Allows manual triggers
   pull_request:
+    types: [opened, synchronize]
     branches: [ master ]
 
 jobs:
@@ -11,6 +12,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 2
 
       - name: Build frontend image
         run: docker build -t tic-tac-toe-frontend:${{ github.sha }} ./frontend
@@ -28,6 +31,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 2
 
       - name: Build backend image
         run: docker build -t tic-tac-toe-backend:${{ github.sha }} ./backend
