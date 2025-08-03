@@ -38,7 +38,7 @@ function isSafePassword(password) {
 // ✅ Centralized input validation middleware
 function validateCredentials(req, res, next) {
   const { username, password } = req.body;
-  if (!isSafeInput(username) || !isSafeInput(password)) {
+  if (!isSafeUsername(username) || !isSafePassword(password)) {
     return res.status(400).json({ error: 'Invalid characters in input' });
   }
   next();
