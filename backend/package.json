@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "test": "jest",
+    "test:security": "jest __tests__/sql-injection.test.js"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
@@ -14,5 +16,9 @@
     "passport": "^0.6.0",
     "passport-local": "^1.0.0",
     "pg": "^8.11.1"
+  },
+  "devDependencies": {
+    "jest": "^30.0.5",
+    "supertest": "^7.1.4"
   }
 }
