@@ -7,11 +7,12 @@
 body {
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   background: #f0f0f0;
-  height: 100vh;
+  min-height: 100vh;
   width: 100%;
-  overflow: hidden;
+  padding: 2rem 0;
+  overflow-y: auto;
   font-family: 'Arial', sans-serif;
 }
 
@@ -25,6 +26,8 @@ body {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   padding: 20px;
   margin: auto;
+  max-width: 90%;
+  width: 800px;
 }
 
 table {

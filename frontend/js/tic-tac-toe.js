@@ -97,6 +97,8 @@ function set() {
             body: JSON.stringify({
                 winner: 'Player ' + turn
             })
+        }).then(() => {
+            window.fetchGames();
         }).catch(err => console.error('Failed to save game:', err));
         startNewGame();
     } else if (moves === N_SIZE * N_SIZE) {
