@@ -1,0 +1,78 @@
+name: SQL Injection Security Tests
+
+on:
+  push:
+    branches: [ master ]
+    paths:
+      - 'backend/**'
+      - '.github/workflows/sql-injection-tests.yml'
+  pull_request:
+    branches: [ master ]
+    paths:
+      - 'backend/**'
+
+jobs:
+  sql-injection-tests:
+    runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: testuser
+          POSTGRES_PASSWORD: testpass
+          POSTGRES_DB: testdb
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    env:
+      DATABASE_URL: postgresql://testuser:testpass@localhost:5432/testdb
+      NODE_ENV: test
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '24'
+        cache: 'npm'
+        cache-dependency-path: backend/package-lock.json
+
+    - name: Install backend dependencies
+      working-directory: ./backend
+      run: npm ci
+
+    - name: Wait for PostgreSQL
+      run: |
+        until pg_isready -h localhost -p 5432 -U testuser; do
+          echo "Waiting for PostgreSQL..."
+          sleep 2
+        done
+
+    - name: Start backend server in background
+      working-directory: ./backend
+      run: |
+        npm start &
+        echo $! > server.pid
+        # Wait for server to start - check if port 8000 is accepting connections
+        timeout 30 bash -c 'until nc -z localhost 8000; do echo "Waiting for server..."; sleep 2; done'
+        echo "Server started successfully"
+
+    - name: Run SQL injection security tests
+      working-directory: ./backend
+      run: npm run test:security
+
+    - name: Stop backend server
+      working-directory: ./backend
+      run: |
+        if [ -f server.pid ]; then
+          kill $(cat server.pid) || true
+          rm server.pid
+        fi
