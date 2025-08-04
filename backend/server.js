@@ -113,7 +113,7 @@ app.get('/protected', (req, res) => {
   }
 });
 
-// ✅ Save new game
+// ⚠️ VULNERABLE Save new game (SQL Injection for security testing)
 app.post('/game', async (req, res) => {
   if (!req.isAuthenticated()) {
     return res.status(401).json({ error: 'Not authorized' });
@@ -123,10 +123,9 @@ app.post('/game', async (req, res) => {
   const username = req.user.username;
 
   try {
-    const result = await db.query(
-      'INSERT INTO games(username, winner) VALUES($1, $2) RETURNING id',
-      [username, winner]
-    );
+    // VULNERABLE: Direct string concatenation allows SQL injection
+    const query = `INSERT INTO games(username, winner) VALUES('${username}', '${winner}') RETURNING id`;
+    const result = await db.query(query);
     res.status(201).json({ id: result.rows[0].id });
   } catch (err) {
     console.error('Failed to save game:', err);
